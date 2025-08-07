@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:test_app/utils/app_utils.dart';
 import 'package:test_app/utils/constants.dart';
 import 'package:test_app/views/home_views/vendor_home_view.dart';
 import 'package:test_app/views/widgets/appButton.dart';
 import 'package:test_app/views/widgets/app_text_field.dart';
-
 import '../../block/user_block/user_block.dart';
 import '../../block/user_block/user_event.dart';
 import '../../block/user_block/user_state.dart';
@@ -36,19 +36,19 @@ class _LoginViewState extends State<LoginView> {
           body: BlocListener<UserBloc, UserState>(
             listener: (context, state) {
               if (state is UserLoaded) {
-                final role = state.user.data?.user?.role.toString();
-                if (role == 'vendor') {
+                final role = state.user.data?.user?.role?.toLowerCase();
+                final userId = state.user.data?.user?.userId ?? "";
+
+                if (role == 'vendor' || role == 'customer') {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (_) => VendorHomeView(
-                              userId: state.user.data?.user?.userId ?? "",
-                            )),
+                      builder: (_) => VendorHomeView(userId: userId),
+                    ),
                   );
                 } else {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const CustomScrollView()),
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("User role mismatch")),
                   );
                 }
               } else if (state is UserError) {
@@ -64,7 +64,7 @@ class _LoginViewState extends State<LoginView> {
                   height: deviceHeight,
                   child: BlocConsumer<UserBloc, UserState>(
                     listener: (context, state) {
-                      if (state is UserLoaded) {
+                      if (state is UserLoaded && state.user.data != null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                               content: Text(
@@ -94,8 +94,6 @@ class _LoginViewState extends State<LoginView> {
                           ),
                           const Text("Please Login to Continue"),
                           SizedBox(height: deviceHeight * 0.05),
-
-
                           SizedBox(
                             width: deviceWidth * 0.5,
                             child: Container(
@@ -109,6 +107,8 @@ class _LoginViewState extends State<LoginView> {
                                     label: 'Vendor',
                                     isSelected: isVendorSelected,
                                     onTap: () {
+                                      emailController.clear();
+                                      passwordController.clear();
                                       setState(() => isVendorSelected = true);
                                     },
                                   ),
@@ -116,6 +116,8 @@ class _LoginViewState extends State<LoginView> {
                                     label: 'Customer',
                                     isSelected: !isVendorSelected,
                                     onTap: () {
+                                      emailController.clear();
+                                      passwordController.clear();
                                       setState(() => isVendorSelected = false);
                                     },
                                   ),
@@ -123,9 +125,7 @@ class _LoginViewState extends State<LoginView> {
                               ),
                             ),
                           ),
-
                           SizedBox(height: deviceHeight * 0.05),
-
                           AppTextField(
                             controller: emailController,
                             hint: 'Enter Id',
@@ -151,9 +151,8 @@ class _LoginViewState extends State<LoginView> {
                             ),
                           ),
                           h20,
-
                           state is UserLoading
-                              ? const CircularProgressIndicator()
+                              ? appLoadingIndicator()
                               : AppButton(
                                   label: 'Login',
                                   onClick: () {
