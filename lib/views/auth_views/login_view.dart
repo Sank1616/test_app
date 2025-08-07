@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:test_app/utils/app_utils.dart';
 import 'package:test_app/utils/constants.dart';
-import 'package:test_app/views/home_views/vendor_home_view.dart';
+import 'package:test_app/views/home_views/home_page.dart';
 import 'package:test_app/views/widgets/appButton.dart';
 import 'package:test_app/views/widgets/app_text_field.dart';
 import '../../block/user_block/user_block.dart';
@@ -43,7 +43,7 @@ class _LoginViewState extends State<LoginView> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => VendorHomeView(userId: userId),
+                      builder: (_) => HomeView(userId: userId),
                     ),
                   );
                 } else {

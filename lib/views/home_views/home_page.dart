@@ -9,10 +9,10 @@ import '../../data/services/chat_message_service.dart';
 import '../../domain/repositories/chat_repository.dart';
 import 'chats_view/chats_detaile_view.dart';
 
-class VendorHomeView extends StatelessWidget {
+class HomeView extends StatelessWidget {
   final String userId;
 
-  const VendorHomeView({super.key, required this.userId});
+  const HomeView({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +22,9 @@ class VendorHomeView extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
-        title:  Text(
+        title: Text(
           'Chats'.toUpperCase(),
-          style: TextStyle(
+          style: const TextStyle(
             color: appDefaultColor,
             fontWeight: FontWeight.w500,
             fontSize: 18,
@@ -102,9 +102,7 @@ class VendorHomeView extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10)
-      ),
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: CircleAvatar(
@@ -140,15 +138,17 @@ class VendorHomeView extends StatelessWidget {
               const SizedBox(
                 width: 5,
               ),
-              Text(
-                chat.lastMessage?.content ?? 'No messages yet',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey[500],
-                  height: 0.6,
+              Expanded(
+                child: Text(
+                  chat.lastMessage?.content ?? 'No messages yet',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey[500],
+                    height: 0.6,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
@@ -243,8 +243,7 @@ class VendorHomeView extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
-            onPressed: () {
-            },
+            onPressed: () {},
             icon: const Icon(Icons.refresh),
             label: const Text('Try Again'),
             style: ElevatedButton.styleFrom(
@@ -289,8 +288,7 @@ class VendorHomeView extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           ElevatedButton.icon(
-            onPressed: () {
-            },
+            onPressed: () {},
             icon: const Icon(Icons.add_comment),
             label: const Text('Start New Chat'),
             style: ElevatedButton.styleFrom(
